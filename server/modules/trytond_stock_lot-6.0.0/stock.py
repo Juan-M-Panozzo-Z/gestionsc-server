@@ -72,7 +72,6 @@ class Lot(ModelSQL, ModelView, LotMixin, StockMixin):
     "Stock Lot"
     __name__ = 'stock.lot'
     _rec_name = 'number'
-
     quantity = fields.Function(fields.Float('Quantity'), 'get_quantity',
         searcher='search_quantity')
     forecast_quantity = fields.Function(fields.Float('Forecast Quantity'),
@@ -82,6 +81,18 @@ class Lot(ModelSQL, ModelView, LotMixin, StockMixin):
         'on_change_with_default_uom')
     default_uom_digits = fields.Function(fields.Integer("Default Unit Digits"),
         'on_change_with_default_uom_digits')
+
+    # TODO: personalizados para sanatorio concordia
+    # Recordar colocar nuevos campos en base de datos
+    # expiration_date = datetime
+    # referencia = character varying
+    # laboratorio = character varying
+
+    expiration_date = fields.Date('Vencimiento', required=True)
+    reference = fields.Char('Referencia', help = 'Referencia del lote')
+    lab = fields.Char('Laboratorio', help = 'Laboratorio del lote', required = True)
+
+    # Fin personalizados
 
     @classmethod
     def __setup__(cls):

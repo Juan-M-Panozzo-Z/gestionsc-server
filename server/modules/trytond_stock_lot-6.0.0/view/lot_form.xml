@@ -2,8 +2,20 @@
 <!-- This file is part of Tryton.  The COPYRIGHT file at the top level of
 this repository contains the full copyright notices and license terms. -->
 <form>
+<!-- 
+    TODO: Los campos referencia, laboratorio, expiration_date
+    corresponden a los personalizados en stock.py
+-->
+    <label name="reference"/>
+    <field name="reference"/>
+    <newline/>
+    <label name="lab"/>
+    <field name="lab"/>
     <label name="number"/>
     <field name="number"/>
+    <newline/>
     <label name="product"/>
     <field name="product"/>
+    <label name="expiration_date"/>
+    <field name="expiration_date"/>
 </form>

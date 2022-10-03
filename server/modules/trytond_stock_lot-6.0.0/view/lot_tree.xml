@@ -2,6 +2,13 @@
 <!-- This file is part of Tryton.  The COPYRIGHT file at the top level of
 this repository contains the full copyright notices and license terms. -->
 <tree>
-    <field name="number" expand="1"/>
-    <field name="product" expand="1"/>
+<!-- 
+    TODO: Los campos reference, lab, expiration_date
+    corresponden a los personalizados en stock.py
+-->
+    <field name="number"/>
+    <field name="lab"/>
+    <field name="product" expand="2"/>
+    <field name="reference"/>
+    <field name="expiration_date"/>
 </tree>
