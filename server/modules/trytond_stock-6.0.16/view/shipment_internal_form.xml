@@ -2,24 +2,22 @@
 <!-- This file is part of Tryton.  The COPYRIGHT file at the top level of
 this repository contains the full copyright notices and license terms. -->
 <form cursor="from_location">
-    <label name="reference"/>
-    <field name="reference"/>
+<!-- 
+    TODO: Los campos planeed_start y planned_date no se muestran en el formulario
+-->
+    <label name="company"/>
+    <field name="company"/>
     <label name="number"/>
     <field name="number"/>
+    <label name="reference"/>
+    <field name="reference"/>
+    <label name="effective_date"/>
+    <field name="effective_date"/>
     <label name="from_location"/>
     <field name="from_location"/>
     <label name="to_location"/>
     <field name="to_location"/>
-    <label name="planned_date"/>
-    <field name="planned_date"/>
-    <label name="planned_start_date"/>
-    <field name="planned_start_date"/>
-    <label name="effective_date"/>
-    <field name="effective_date"/>
-    <label name="effective_start_date"/>
-    <field name="effective_start_date"/>
-    <label name="company"/>
-    <field name="company"/>
+
     <notebook colspan="4">
         <page name="moves">
             <field name="moves" colspan="4" view_ids="stock.move_view_list_shipment"/>
