@@ -2,7 +2,10 @@
 <!-- This file is part of Tryton.  The COPYRIGHT file at the top level of
 this repository contains the full copyright notices and license terms. -->
 <tree>
-<!-- number, costumer, prestador, sector, effective_date, state -->
+<!-- 
+    TODO: los campos sector e insurance corresponden a la modificación
+    cargada en shipment.py
+-->
     <field name="number"/>
     <field name="customer" expand="2"/>
     <field name="insurance" expand="2"/>

@@ -1702,6 +1702,24 @@ class ShipmentOutReturn(ShipmentMixin, Workflow, ModelSQL, ModelView):
         ], 'State', readonly=True,
         help="The current state of the shipment.")
 
+    # TODO: personalizados para sanatorio concordia
+    # Recordar colocar nuevos campos en base de datos
+    # insurance = integer
+        
+    insurance = fields.Many2One('gnuhealth.insurance', 'Nº de Afiliado',
+        domain=[('name', '=', Eval('customer'))],
+        depends=['state','customer'],
+        states={'readonly': Eval('state') != 'draft',
+        })
+
+    sector = fields.Char("Sector", size=None, select=True,
+        states={'readonly': Eval('state') != 'draft',}, 
+        depends=['state'],
+        help="Sector donde se encuentra el paciente",
+        required=True)
+
+    # Fin de personalizacion
+
     @classmethod
     def __setup__(cls):
         super(ShipmentOutReturn, cls).__setup__()
