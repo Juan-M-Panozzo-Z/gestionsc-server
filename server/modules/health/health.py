@@ -3383,6 +3383,21 @@ class Appointment(ModelSQL, ModelView):
         domain=[('type', '=', 'service')],
         help='Consultation Services')
 
+    # TODO: personalizados para sanatorio concordia
+    # Recordar colocar nuevos campos en base de datos
+    # insurance = integer
+    # insurance_company = character varying
+    # procedure = integer
+
+    insurance = fields.Many2One('gnuhealth.insurance','Ficha de seguro',
+        depends=['state','patient'], help='Ficha de OS / Prepaga')
+
+    insurance_company = fields.Char('Prestador')
+
+    procedure = fields.Many2One('gnuhealth.procedure','Procedimiento')
+
+    # Fin personalizados
+
     @classmethod
     def __setup__(cls):
         super(Appointment, cls).__setup__()
