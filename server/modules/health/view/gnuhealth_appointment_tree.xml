@@ -2,7 +2,8 @@
 <tree>
 <!-- 
     TODO: Los campos no_show, visit_type, urgency, appointment_type, speciality, name, institution no se muestran en el formulario
-    se agregaron los campos 
+    se agregaron los campos procedure, insurance, insurance_company 
+    correspondientes a la actualizacion en health.py
 -->
     <button name="checked_in" help="The patient has arrived and is waiting" string="Checked in"/>
     <field name="patient" expand="1"/>

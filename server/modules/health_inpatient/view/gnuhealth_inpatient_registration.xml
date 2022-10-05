@@ -6,12 +6,18 @@
                 <group colspan="2" col="6" id="group_admin_data">
                     <label name="name"/>
                     <field name="name"/>
+                    <newline/>
                     <label name="patient"/>
                     <field name="patient"/>
+                    <label name="insurance"/>
+                    <field name="insurance"/>
                     <label name="puid"/>
                     <field name="puid"/>
                 </group>
+                <newline/>
                 <group colspan="2" id="group_admin_bed">
+                    <label name="unit"/>
+                    <field name="unit"/>
                     <label name="bed"/>
                     <field name="bed"/>
                 </group>
@@ -21,16 +27,16 @@
                     <field name="hospitalization_date"/>
                     <label name="discharge_date"/>
                     <field name="discharge_date"/>
-                    <label name="attending_physician"/>
-                    <field name="attending_physician"/>
-                    <label name="operating_physician"/>
-                    <field name="operating_physician"/>
                 </group>
                 <group colspan="4" id="group_admin_data_holder3">
                     <label name="admission_type"/>
                     <field name="admission_type"/>
                     <label name="admission_reason"/>
                     <field name="admission_reason"/>
+                    <label name="attending_physician"/>
+                    <field name="attending_physician"/>
+                    <label name="operating_physician"/>
+                    <field name="operating_physician"/>
                     <newline/>
                     <group colspan="4" string="Notes" id="inpatient_registration_notes_group">
                         <field name="info"/>

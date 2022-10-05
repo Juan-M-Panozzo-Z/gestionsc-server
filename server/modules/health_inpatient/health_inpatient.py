@@ -81,14 +81,16 @@ class InpatientRegistration(ModelSQL, ModelView):
     patient = fields.Many2One(
         'gnuhealth.patient', 'Patient',
         required=True, select=True, states=STATES)
+
+    # TODO: Personalizado para Sanatorio Concordia
     admission_type = fields.Selection([
-        (None, ''),
-        ('routine', 'Routine'),
-        ('maternity', 'Maternity'),
         ('elective', 'Elective'),
         ('urgent', 'Urgent'),
         ('emergency', 'Emergency'),
+        ('prequirurgic', 'Prequirurgic'),
         ], 'Admission type', required=True, select=True, states=STATES)
+    # Fin personalizado
+
     hospitalization_date = fields.DateTime(
         'Hospitalization date',
         required=True, select=True, states=STATES)
@@ -98,9 +100,14 @@ class InpatientRegistration(ModelSQL, ModelView):
     attending_physician = fields.Many2One(
         'gnuhealth.healthprofessional',
         'Attending Physician',  states=STATES)
+    
+    # TODO: Personalizado para Sanatorio Concordia
     operating_physician = fields.Many2One(
         'gnuhealth.healthprofessional',
-        'Operating Physician',  states=STATES)
+        'Operating Physician',
+        states={'invisible': Not(Equal(Eval('admission_type'), 'prequirurgic'))},)
+    # Fin personalizado
+
     admission_reason = fields.Many2One(
         'gnuhealth.pathology',
         'Reason for Admission', help="Reason for Admission", states=STATES,
@@ -169,6 +176,22 @@ class InpatientRegistration(ModelSQL, ModelView):
     puid = fields.Function(
         fields.Char('PUID', help="Person Unique Identifier"),
         'get_patient_puid', searcher="search_patient_puid")
+
+    # TODO: personalizados para sanatorio concordia
+    # Recordar colocar nuevos campos en base de datos
+    # insurance = integer
+    # unit = integer
+    
+    insurance = fields.Many2One(
+        'gnuhealth.insurance', 'Obra Social',
+        required=True, states=STATES)
+
+    unit = fields.Many2One(
+        'gnuhealth.hospital.unit', 'Unidad',
+        required=True, states=STATES)
+
+
+    # Fin personalizados
 
     @staticmethod
     def default_institution():

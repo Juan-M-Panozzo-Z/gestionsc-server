@@ -1,12 +1,18 @@
 <?xml version="1.0"?>
 <tree>
-    <field name="name" expand="1"/>
+<!-- 
+    El campo institucion no se muestra en el formulario
+    se agregaron los campos insurance, unit correspondiente a la actualizacion en
+    el modulo health_insurance.py
+-->
+    <field name="name"/>
+    <field name="unit"/>
+    <field name="bed"/>
     <field name="patient" expand="1"/>
+    <field name="insurance" expand="2"/>
     <field name="puid" expand="1"/>
+    <field name="admission_type" expand="1"/>
     <field name="hospitalization_date" widget="date"/>
     <field name="discharge_date" widget="date"/>
-    <field name="bed" expand="1"/>
-    <field name="admission_type" expand="1"/>
     <field name="state" expand="1"/>
-    <field name="institution"/>
 </tree>
