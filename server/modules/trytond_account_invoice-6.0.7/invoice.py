@@ -254,6 +254,23 @@ class Invoice(Workflow, ModelSQL, ModelView, TaxableMixin):
 
     del _states, _depends
 
+    # TODO: personalizados para sanatorio concordia
+    # Recordar colocar nuevos campos en base de datos
+    # type_service = integer
+    # nomenclador_unit = integer
+
+    type_service = fields.Selection([
+        ('1', 'Farmacia'),
+        ('2', 'Medico'),
+        ('3', 'Laboratorio'),
+        ('4', 'Radiologia'),
+        ('5', 'Otros'),
+        ], 'Type', select=True, required=True,)
+
+    nomenclador_unit = fields.Integer('Nomenclador Unit', required=True,)
+
+    # Fin personalizados
+
     @classmethod
     def __setup__(cls):
         super(Invoice, cls).__setup__()
@@ -1844,6 +1861,31 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
         states=_states, depends=_depends)
 
     del _states, _depends
+# 999666333
+    # TODO: personalizados para sanatorio concordia
+    # Recordar colocar nuevos campos en base de datos
+    # nomenclador_unit = integer
+    
+    nomenclador_unit = fields.Function(
+        fields.Many2One(
+            'product.product.nomenclador_unit',
+            'Nomenclador Unit'), 
+            'get_nomenclador_unit')
+
+    # fin personalizados
+
+    invoice_date = fields.Many2One(
+        'account.invoice', 
+        'Invoice', 
+        # ondelete='CASCADE',
+        # select=True, 
+        # states={
+        #     'required': (~Eval('invoice_type') & Eval('party') & Eval('currency') & Eval('company')),
+        #     'invisible': Bool(Eval('context', {}).get('standalone')),
+        #     'readonly': _states['readonly'] & Bool(Eval('invoice')),
+        #     },
+        # depends=['invoice_type', 'party', 'company', 'currency'] + _depends
+        )
 
     @classmethod
     def __setup__(cls):
@@ -1976,6 +2018,11 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
         Invoice = pool.get('account.invoice')
         return Invoice.fields_get(['state'])['state']['selection']
 
+    @fields.depends('product')
+    def on_change_with_product_nomenclador_unit(self, name=None):
+        if self.product:
+            return self.product.nomenclador_unit
+
     @fields.depends('invoice', '_parent_invoice.state')
     def on_change_with_invoice_state(self, name=None):
         if self.invoice:
@@ -2019,7 +2066,8 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
             currency = (self.invoice.currency if self.invoice
                 else self.currency)
             amount = (Decimal(str(self.quantity or '0.0'))
-                * (self.unit_price or Decimal('0.0')))
+                 * (10 or Decimal('1'))
+                 * (self.unit_price or Decimal('0.0')))
             invoice_type = (
                 self.invoice.type if self.invoice else self.invoice_type)
             if (invoice_type == 'in'
