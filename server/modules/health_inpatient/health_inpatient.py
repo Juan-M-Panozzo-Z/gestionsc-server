@@ -83,6 +83,7 @@ class InpatientRegistration(ModelSQL, ModelView):
         required=True, select=True, states=STATES)
 
     # TODO: Personalizado para Sanatorio Concordia
+    # Se eliminaron campos sin uso y se agrego el campo prequirurgico
     admission_type = fields.Selection([
         ('elective', 'Elective'),
         ('urgent', 'Urgent'),
@@ -102,6 +103,7 @@ class InpatientRegistration(ModelSQL, ModelView):
         'Attending Physician',  states=STATES)
     
     # TODO: Personalizado para Sanatorio Concordia
+    # Se agregó filtro, solo se muestra cuando la hospitalizacion es prequirurgica
     operating_physician = fields.Many2One(
         'gnuhealth.healthprofessional',
         'Operating Physician',
@@ -112,6 +114,8 @@ class InpatientRegistration(ModelSQL, ModelView):
         'gnuhealth.pathology',
         'Reason for Admission', help="Reason for Admission", states=STATES,
         select=True)
+    # TODO: personalizado para Sanatorio Concordia
+    # Se agregó filtro por unidad de atención
     bed = fields.Many2One(
         'gnuhealth.hospital.bed', 'Hospital Bed',
         states={
@@ -120,8 +124,10 @@ class InpatientRegistration(ModelSQL, ModelView):
                 Eval('state') == 'done',
                 Eval('state') == 'finished',
                 Bool(Eval('name')),
-                        )
+                depends=['name'],
+                domain=[('unit', '=', Eval('unit'))])
             },
+    # fin personalizado
         depends=['name'])
     nursing_plan = fields.Text('Nursing Plan', states=STATES)
     medications = fields.One2Many(

@@ -1,6 +1,10 @@
 <?xml version="1.0"?>
 <!-- This file is part of Tryton.  The COPYRIGHT file at the top level of
 this repository contains the full copyright notices and license terms. -->
+<!-- 
+    se agregaronlos campos unit_price, nomenclador_unit 
+    correspondientes a la actualizacion en invoice.py
+ -->
 <form cursor="product">
     <label name="invoice"/>
     <field name="invoice" colspan="3"/>
@@ -18,6 +22,8 @@ this repository contains the full copyright notices and license terms. -->
             <field name="quantity"/>
             <label name="unit"/>
             <field name="unit"/>
+            <label name="description"/>
+            <field name="nomenclador_unit"/>
             <label name="unit_price"/>
             <field name="unit_price" symbol="currency"/>
             <label name="amount"/>

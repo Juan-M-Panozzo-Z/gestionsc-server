@@ -1608,8 +1608,8 @@ class HospitalWard(ModelSQL, ModelView):
 
     floor = fields.Integer('Floor Number')
     unit = fields.Many2One('gnuhealth.hospital.unit', 'Unit',
-                           domain=[('institution', '=', Eval('institution'))],
-                           depends=['institution'])
+        domain=[('institution', '=', Eval('institution'))],
+        depends=['institution'])
 
     private = fields.Boolean(
         'Private', help='Check this option for private room')
@@ -1688,16 +1688,13 @@ class HospitalBed(ModelSQL, ModelView):
         depends=['institution'],
         help='Ward or room')
 
+    # TODO: Personalizado para Sanatorio Concordia
+    # Se quitaron las opciones que no se utilizan y se agregaron otras
     bed_type = fields.Selection((
-        (None, ''),
-        ('gatch', 'Gatch Bed'),
-        ('electric', 'Electric'),
-        ('stretcher', 'Stretcher'),
-        ('low', 'Low Bed'),
-        ('low_air_loss', 'Low Air Loss'),
-        ('circo_electric', 'Circo Electric'),
-        ('clinitron', 'Clinitron'),
+        ('standard', 'Standard'),
+        ('armchair', 'Armchair'),
         ), 'Bed Type', required=True, sort=False)
+    # Fin personalizado
 
     telephone_number = fields.Char(
         'Telephone Number', help='Telephone number / Extension')
@@ -1712,6 +1709,19 @@ class HospitalBed(ModelSQL, ModelView):
         ('to_clean', 'Needs cleaning'),
         ('na', 'Not available'),
         ), 'Status', readonly=True, sort=False)
+
+    # TODO: personallizados para Sanatorio Concordia
+    # recordar colocar nuevos campos en base de datos
+    # unit = integer
+
+    unit = fields.Many2One(
+        'gnuhealth.hospital.unit', 'Unidad',
+        domain=[('institution', '=', Eval('institution'))],
+        depends=['institution'],
+        help='Unidad de atención',
+        states={'readonly': Eval('id', 0) > 0},)
+
+    # Fin personalizados
 
     @staticmethod
     def default_bed_type():

@@ -4,6 +4,7 @@ import copy
 import logging
 from decimal import Decimal
 from importlib import import_module
+from sre_parse import State
 
 import stdnum
 import stdnum.exceptions
@@ -33,6 +34,10 @@ TYPES = [
     ('goods', 'Goods'),
     ('assets', 'Assets'),
     ('service', 'Service'),
+    # Personalizados para Sanatorio Concordia
+    # Se agregó el tipo nomenclador
+    ('nomenclador', 'Nomenclador'),
+    # fin personalizados
     ]
 COST_PRICE_METHODS = [
     ('fixed', 'Fixed'),
@@ -77,15 +82,18 @@ class Template(
             "List Price", required=True, digits=price_digits,
             help="The standard price the product is sold at."))
     list_prices = fields.One2Many(
-        'product.list_price', 'template', "List Prices")
+        'product.list_price', 'template', "List Prices",)
     cost_price = fields.Function(fields.Numeric(
             "Cost Price", digits=price_digits,
-            help="The amount it costs to purchase or make the product, "
-            "or carry out the service."),
-        'get_cost_price')
+            help="The amount it costs to purchase or make the product,"
+            "or carry out the service.",
+            states={'invisible': Eval('type') == 'nomenclador'},),
+            'get_cost_price',
+            )
     cost_price_method = fields.MultiValue(fields.Selection(
             COST_PRICE_METHODS, "Cost Price Method", required=True,
-            help="The method used to calculate the cost price."))
+            help="The method used to calculate the cost price.",
+            states={'invisible': Eval('type') == 'nomenclador'},))
     cost_price_methods = fields.One2Many(
         'product.cost_price_method', 'template', "Cost Price Methods")
     default_uom = fields.Many2One('product.uom', "Default UOM", required=True,
@@ -113,6 +121,32 @@ class Template(
             ],
         depends=['active'],
         help="The different variants the product comes in.")
+
+    # TODO: Personalizacion para Sanatorio Concordia S.A.
+    # Recordar colocar nuevos campos en base de datos
+    # type_service = Integer
+    # nomenclador_unit = Integer
+
+    type_service = fields.Selection([
+        (1, 'Farmacia'),
+        (2, 'Medico'),
+        (3, 'Laboratorio'),
+        (4, 'Radiologia'),
+        (5, 'Otros'),
+        ], 'Tipo',
+        states={
+            'invisible': Eval('type') != 'nomenclador',
+        },depends=['type'],)
+    
+    nomenclador_unit = fields.Integer(
+        'Unidades',
+        required=True,
+        help="Unidades en nomenclador nacional",
+        states={
+            'invisible': Eval('type') != 'nomenclador',
+        },depends=['type'],)
+
+    # Fin personalizados
 
     @classmethod
     def __register__(cls, module_name):
@@ -411,6 +445,32 @@ class Product(
                     setattr(cls, 'order_%s' % attr, order_method)
                 if isinstance(tfield, fields.One2Many):
                     getattr(cls, attr).setter = '_set_template_function'
+
+    # TODO: Personalizacion para Sanatorio Concordia S.A.
+    # Recordar colocar nuevos campos en base de datos
+    # type_service = Integer
+    # nomenclador_unit = Integer
+
+    type_service = fields.Selection([
+        (1, 'Farmacia'),
+        (2, 'Medico'),
+        (3, 'Laboratorio'),
+        (4, 'Radiologia'),
+        (5, 'Otros'),
+        ], 'Tipo',
+        states={
+            'invisible': Eval('type') != 'nomenclador',
+        },depends=['type'],)
+    
+    nomenclador_unit = fields.Integer(
+        'Unidades',
+        required=True,
+        help="Unidades en nomenclador nacional",
+        states={
+            'invisible': Eval('type') != 'nomenclador',
+        },depends=['type'],)
+
+    # Fin personalizados
 
     @classmethod
     def __register__(cls, module):

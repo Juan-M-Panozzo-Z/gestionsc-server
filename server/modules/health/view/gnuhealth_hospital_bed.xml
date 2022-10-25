@@ -6,6 +6,8 @@
     <field name="institution"/>
     <label name="ward"/>
     <field name="ward"/>
+    <label name="unit"/>
+    <field name="unit"/>
     <label name="bed_type"/>
     <field name="bed_type"/>
     <label name="telephone_number"/>
