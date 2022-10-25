@@ -22,7 +22,7 @@ this repository contains the full copyright notices and license terms. -->
             <field name="quantity"/>
             <label name="unit"/>
             <field name="unit"/>
-            <label name="description"/>
+            <label name="nomenclador_unit"/>
             <field name="nomenclador_unit"/>
             <label name="unit_price"/>
             <field name="unit_price" symbol="currency"/>

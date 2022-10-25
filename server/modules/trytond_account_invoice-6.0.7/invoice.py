@@ -1861,16 +1861,14 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
         states=_states, depends=_depends)
 
     del _states, _depends
-# 999666333
+
     # TODO: personalizados para sanatorio concordia
     # Recordar colocar nuevos campos en base de datos
     # nomenclador_unit = integer
     
-    nomenclador_unit = fields.Function(
-        fields.Many2One(
-            'product.product.nomenclador_unit',
-            'Nomenclador Unit'), 
-            'get_nomenclador_unit')
+    # Este campo llama el valor nomenclador_unit de la tabla product.product
+    nomenclador_unit = fields.Function(fields.Integer('Nomenclador Unit',),
+        'on_change_with_nomenclador_unit')
 
     # fin personalizados
 
@@ -2018,10 +2016,15 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
         Invoice = pool.get('account.invoice')
         return Invoice.fields_get(['state'])['state']['selection']
 
+    # Personalizados para Sanatorio Concordia
+    # Este metodo es llamado por el campo nomenclador_unit
+    
     @fields.depends('product')
-    def on_change_with_product_nomenclador_unit(self, name=None):
+    def on_change_with_nomenclador_unit(self, name=None):
         if self.product:
             return self.product.nomenclador_unit
+        return None
+    # Fin personalizados
 
     @fields.depends('invoice', '_parent_invoice.state')
     def on_change_with_invoice_state(self, name=None):
@@ -2059,15 +2062,19 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
     @fields.depends(
         'type', 'quantity', 'unit_price', 'taxes_deductible_rate', 'invoice',
         '_parent_invoice.currency', 'currency', 'taxes',
-        '_parent_invoice.type', 'invoice_type',
+        '_parent_invoice.type', 'invoice_type','nomenclador_unit',
         methods=['_get_taxes'])
     def on_change_with_amount(self):
         if self.type == 'line':
             currency = (self.invoice.currency if self.invoice
                 else self.currency)
+                # Personalizado para Sanatorio Concordia
+                # Aquí se calcula el monto de la línea de factura
+                # Se agrego el campo nomenclador_unit a la línea de factura
             amount = (Decimal(str(self.quantity or '0.0'))
-                 * (10 or Decimal('1'))
+                 * (self.nomenclador_unit or Decimal('0.0'))
                  * (self.unit_price or Decimal('0.0')))
+                #  fin personalizado
             invoice_type = (
                 self.invoice.type if self.invoice else self.invoice_type)
             if (invoice_type == 'in'
