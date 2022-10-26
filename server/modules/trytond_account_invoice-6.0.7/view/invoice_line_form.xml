@@ -4,14 +4,17 @@ this repository contains the full copyright notices and license terms. -->
 <!-- 
     se agregaronlos campos unit_price, nomenclador_unit 
     correspondientes a la actualizacion en invoice.py
+
+    Todos los campos que estan como comentario
+    fueron escondidos para una interfaz mas limpia
  -->
 <form cursor="product">
     <label name="invoice"/>
     <field name="invoice" colspan="3"/>
-    <label name="type"/>
-    <field name="type"/>
-    <label name="sequence"/>
-    <field name="sequence"/>
+    <!-- <label name="type" invisible="1"/> -->
+    <field name="type" invisible="1"/>
+    <!-- <label name="sequence" invisible="1"/> -->
+    <field name="sequence" invisible="1"/>
     <notebook colspan="4">
         <page string="General" id="general">
             <label name="product"/>
@@ -20,34 +23,34 @@ this repository contains the full copyright notices and license terms. -->
             <field name="account"/>
             <label name="quantity"/>
             <field name="quantity"/>
-            <label name="unit"/>
-            <field name="unit"/>
-            <label name="nomenclador_unit"/>
-            <field name="nomenclador_unit"/>
             <label name="unit_price"/>
             <field name="unit_price" symbol="currency"/>
             <label name="amount"/>
             <field name="amount" symbol="currency"/>
-            <label name="taxes_date"/>
-            <field name="taxes_date"/>
-            <label name="taxes_deductible_rate"/>
-            <group col="2" id="taxes_deductible_rate">
-                <field name="taxes_deductible_rate" factor="100" xexpand="0"/>
-                <label name="taxes_deductible_rate" string="%" xalign="0.0" xexpand="1"/>
-            </group>
-            <field name="taxes" colspan="4"/>
+            <!-- <label name="unit" invisible="1"/> -->
+            <field name="unit" invisible="1"/>
+            <!-- <label name="nomenclador_unit" invisible="1"/> -->
+            <field name="nomenclador_unit" invisible="1"/>
+            <!-- <label name="taxes_date"/> -->
+            <!-- <field name="taxes_date"/> -->
+            <!-- <label name="taxes_deductible_rate"/> -->
+            <!-- <group col="2" id="taxes_deductible_rate"> -->
+                <!-- <field name="taxes_deductible_rate" factor="100" xexpand="0"/> -->
+                <!-- <label name="taxes_deductible_rate" string="%" xalign="0.0" xexpand="1"/> -->
+            <!-- </group> -->
+            <!-- <field name="taxes" colspan="4"/> -->
 
-            <label name="origin"/>
-            <field name="origin" colspan="3"/>
+            <label name="origin" invisible="1"/>
+            <field name="origin" colspan="3" invisible="1"/>
         </page>
-        <page name="description">
+        <!-- <page name="description">
             <separator name="description" colspan="4"/>
             <field name="description" colspan="4"/>
         </page>
         <page string="Notes" id="notes">
             <separator name="note" colspan="4"/>
             <field name="note" colspan="4"/>
-        </page>
+        </page> -->
     </notebook>
     <field name="party_lang" invisible="1" colspan="4"/>
 </form>

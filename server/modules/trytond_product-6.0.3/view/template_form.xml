@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!-- This file is part of Tryton.  The COPYRIGHT file at the top level of
 this repository contains the full copyright notices and license terms. -->
-<!-- Se agregaron los campos type_service, nomenclador_unit  -->
+<!-- Se agregaron los campos gasto_unit, especialista_unit, ayudante_unit  -->
 <!-- correspondientes a la actualizacion en product.py -->
 <form col="6">
 <label name="name"/>
@@ -21,20 +21,22 @@ this repository contains the full copyright notices and license terms. -->
         </group>
         <label name="default_uom"/>
         <field name="default_uom"/>
-        <label name="type_service"/>
-        <field name="type_service"/>
         <newline/>
-            <label name="list_price"/>
-            <field name="list_price"/>
-            <label name="cost_price"/>
-            <field name="cost_price"/>
-            <label name="nomenclador_unit"/>
-            <field name="nomenclador_unit"/>
-        <newline/>
+        <label name="list_price"/>
+        <field name="list_price"/>
+        <label name="cost_price"/>
+        <field name="cost_price"/>
         <label name="cost_price_method"/>
         <field name="cost_price_method"/>
+        <separator string="Unidades de nomenclador" id="nomenclador" colspan="4"/>
+        <label name="gasto_unit" col="2"/>
+        <field name="gasto_unit" col="2"/>
+        <label name="especialista_unit" col="2"/>
+        <field name="especialista_unit" col="2"/>
+        <label name="ayudante_unit" col="2"/>
+        <field name="ayudante_unit" col="2"/>
         <newline/>
-        <field name="products" mode="form,tree" colspan="4" view_ids="product.product_view_form_simple"/>
+        <!-- <field name="products" mode="form,tree" colspan="2" view_ids="product.product_view_form_simple"/> -->
         <field name="categories" colspan="4" view_ids="product.category_view_list"/>
     </page>
 </notebook>

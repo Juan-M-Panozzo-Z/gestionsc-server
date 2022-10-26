@@ -257,7 +257,6 @@ class Invoice(Workflow, ModelSQL, ModelView, TaxableMixin):
     # TODO: personalizados para sanatorio concordia
     # Recordar colocar nuevos campos en base de datos
     # type_service = integer
-    # nomenclador_unit = integer
 
     type_service = fields.Selection([
         ('1', 'Farmacia'),
@@ -266,8 +265,6 @@ class Invoice(Workflow, ModelSQL, ModelView, TaxableMixin):
         ('4', 'Radiologia'),
         ('5', 'Otros'),
         ], 'Type', select=True, required=True,)
-
-    nomenclador_unit = fields.Integer('Nomenclador Unit', required=True,)
 
     # Fin personalizados
 
@@ -1864,11 +1861,17 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
 
     # TODO: personalizados para sanatorio concordia
     # Recordar colocar nuevos campos en base de datos
-    # nomenclador_unit = integer
+    # gasto_unit = integer
     
-    # Este campo llama el valor nomenclador_unit de la tabla product.product
-    nomenclador_unit = fields.Function(fields.Integer('Nomenclador Unit',),
-        'on_change_with_nomenclador_unit')
+    # Este campo llama el valor gasto_unit de la tabla product.product
+    gasto_unit = fields.Function(fields.Integer('Unidades de gasto',),
+        'on_change_with_gasto_unit')
+    
+    especialista_unit = fields.Function(fields.Integer('Unidades de especialista',),
+        'on_change_with_especialista_unit')
+    
+    ayudante_unit = fields.Function(fields.Integer('Unidades de ayudante',),
+        'on_change_with_ayudante_unit')
 
     # fin personalizados
 
@@ -2020,9 +2023,9 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
     # Este metodo es llamado por el campo nomenclador_unit
     
     @fields.depends('product')
-    def on_change_with_nomenclador_unit(self, name=None):
+    def on_change_with_gasto_unit(self, name=None):
         if self.product:
-            return self.product.nomenclador_unit
+            return self.product.gasto_unit
         return None
     # Fin personalizados
 
@@ -2062,7 +2065,7 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
     @fields.depends(
         'type', 'quantity', 'unit_price', 'taxes_deductible_rate', 'invoice',
         '_parent_invoice.currency', 'currency', 'taxes',
-        '_parent_invoice.type', 'invoice_type','nomenclador_unit',
+        '_parent_invoice.type', 'invoice_type','gasto_unit',
         methods=['_get_taxes'])
     def on_change_with_amount(self):
         if self.type == 'line':
@@ -2072,7 +2075,7 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
                 # Aquí se calcula el monto de la línea de factura
                 # Se agrego el campo nomenclador_unit a la línea de factura
             amount = (Decimal(str(self.quantity or '0.0'))
-                 * (self.nomenclador_unit or Decimal('0.0'))
+                 * (self.gasto_unit or Decimal('1.0'))
                  * (self.unit_price or Decimal('0.0')))
                 #  fin personalizado
             invoice_type = (

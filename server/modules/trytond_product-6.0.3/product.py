@@ -124,24 +124,30 @@ class Template(
 
     # TODO: Personalizacion para Sanatorio Concordia S.A.
     # Recordar colocar nuevos campos en base de datos
-    # type_service = Integer
-    # nomenclador_unit = Integer
-
-    type_service = fields.Selection([
-        (1, 'Farmacia'),
-        (2, 'Medico'),
-        (3, 'Laboratorio'),
-        (4, 'Radiologia'),
-        (5, 'Otros'),
-        ], 'Tipo',
+    # gasto_unit = Integer
+    # especialista_unit = Integer
+    # ayudante_unit = Integer
+    
+    gasto_unit = fields.Integer(
+        'Gasto',
+        required=True,
+        help="Unidades de gasto en nomenclador nacional",
         states={
             'invisible': Eval('type') != 'nomenclador',
         },depends=['type'],)
-    
-    nomenclador_unit = fields.Integer(
-        'Unidades',
+
+    especialista_unit = fields.Integer(
+        'Especialista',
         required=True,
-        help="Unidades en nomenclador nacional",
+        help="Unidades de especialista en nomenclador nacional",
+        states={
+            'invisible': Eval('type') != 'nomenclador',
+        },depends=['type'],)
+
+    ayudante_unit = fields.Integer(
+        'Ayudante',
+        required=True,
+        help="Unidades de ayudante en nomenclador nacional",
         states={
             'invisible': Eval('type') != 'nomenclador',
         },depends=['type'],)
@@ -448,27 +454,6 @@ class Product(
 
     # TODO: Personalizacion para Sanatorio Concordia S.A.
     # Recordar colocar nuevos campos en base de datos
-    # type_service = Integer
-    # nomenclador_unit = Integer
-
-    type_service = fields.Selection([
-        (1, 'Farmacia'),
-        (2, 'Medico'),
-        (3, 'Laboratorio'),
-        (4, 'Radiologia'),
-        (5, 'Otros'),
-        ], 'Tipo',
-        states={
-            'invisible': Eval('type') != 'nomenclador',
-        },depends=['type'],)
-    
-    nomenclador_unit = fields.Integer(
-        'Unidades',
-        required=True,
-        help="Unidades en nomenclador nacional",
-        states={
-            'invisible': Eval('type') != 'nomenclador',
-        },depends=['type'],)
 
     # Fin personalizados
 
