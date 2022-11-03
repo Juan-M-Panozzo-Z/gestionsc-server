@@ -2,7 +2,7 @@
 <!-- This file is part of Tryton.  The COPYRIGHT file at the top level of
 this repository contains the full copyright notices and license terms. -->
 <!-- 
-    se agregaronlos campos unit_price, nomenclador_unit 
+    se agregaron los campos gasto_unit, especialista_unit y ayudante_unit 
     correspondientes a la actualizacion en invoice.py
 
     Todos los campos que estan como comentario
@@ -29,8 +29,9 @@ this repository contains the full copyright notices and license terms. -->
             <field name="amount" symbol="currency"/>
             <!-- <label name="unit" invisible="1"/> -->
             <field name="unit" invisible="1"/>
-            <!-- <label name="nomenclador_unit" invisible="1"/> -->
-            <field name="nomenclador_unit" invisible="1"/>
+            <field name="gasto_unit" invisible="1"/>
+            <field name="especialista_unit" invisible="1"/>
+            <field name="ayudante_unit" invisible="1"/>
             <!-- <label name="taxes_date"/> -->
             <!-- <field name="taxes_date"/> -->
             <!-- <label name="taxes_deductible_rate"/> -->

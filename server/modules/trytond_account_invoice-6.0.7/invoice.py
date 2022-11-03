@@ -254,20 +254,6 @@ class Invoice(Workflow, ModelSQL, ModelView, TaxableMixin):
 
     del _states, _depends
 
-    # TODO: personalizados para sanatorio concordia
-    # Recordar colocar nuevos campos en base de datos
-    # type_service = integer
-
-    type_service = fields.Selection([
-        ('1', 'Farmacia'),
-        ('2', 'Medico'),
-        ('3', 'Laboratorio'),
-        ('4', 'Radiologia'),
-        ('5', 'Otros'),
-        ], 'Type', select=True, required=True,)
-
-    # Fin personalizados
-
     @classmethod
     def __setup__(cls):
         super(Invoice, cls).__setup__()
@@ -2027,6 +2013,19 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
         if self.product:
             return self.product.gasto_unit
         return None
+
+    @fields.depends('product')
+    def on_change_with_especialista_unit(self, name=None):
+        if self.product:
+            return self.product.especialista_unit
+        return None
+
+    @fields.depends('product')
+    def on_change_with_ayudante_unit(self, name=None):
+        if self.product:
+            return self.product.ayudante_unit
+        return None
+
     # Fin personalizados
 
     @fields.depends('invoice', '_parent_invoice.state')
@@ -2065,7 +2064,7 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
     @fields.depends(
         'type', 'quantity', 'unit_price', 'taxes_deductible_rate', 'invoice',
         '_parent_invoice.currency', 'currency', 'taxes',
-        '_parent_invoice.type', 'invoice_type','gasto_unit',
+        '_parent_invoice.type', 'invoice_type','gasto_unit','especialista_unit','ayudante_unit',
         methods=['_get_taxes'])
     def on_change_with_amount(self):
         if self.type == 'line':
@@ -2074,8 +2073,13 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
                 # Personalizado para Sanatorio Concordia
                 # Aquí se calcula el monto de la línea de factura
                 # Se agrego el campo nomenclador_unit a la línea de factura
-            amount = (Decimal(str(self.quantity or '0.0'))
+            if (self.invoice_type == 'in'):
+                amount = (Decimal(str(self.quantity or '0.0'))
                  * (self.gasto_unit or Decimal('1.0'))
+                 * (self.unit_price or Decimal('0.0')))
+            else:
+                amount = (Decimal(str(self.quantity or '0.0'))
+                 * (self.especialista_unit or Decimal('1.0'))
                  * (self.unit_price or Decimal('0.0')))
                 #  fin personalizado
             invoice_type = (

@@ -130,7 +130,6 @@ class Template(
     
     gasto_unit = fields.Integer(
         'Gasto',
-        required=True,
         help="Unidades de gasto en nomenclador nacional",
         states={
             'invisible': Eval('type') != 'nomenclador',
@@ -138,7 +137,6 @@ class Template(
 
     especialista_unit = fields.Integer(
         'Especialista',
-        required=True,
         help="Unidades de especialista en nomenclador nacional",
         states={
             'invisible': Eval('type') != 'nomenclador',
@@ -146,7 +144,6 @@ class Template(
 
     ayudante_unit = fields.Integer(
         'Ayudante',
-        required=True,
         help="Unidades de ayudante en nomenclador nacional",
         states={
             'invisible': Eval('type') != 'nomenclador',

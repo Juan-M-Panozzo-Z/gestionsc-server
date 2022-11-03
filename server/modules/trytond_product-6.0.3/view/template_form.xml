@@ -36,7 +36,7 @@ this repository contains the full copyright notices and license terms. -->
         <label name="ayudante_unit" col="2"/>
         <field name="ayudante_unit" col="2"/>
         <newline/>
-        <!-- <field name="products" mode="form,tree" colspan="2" view_ids="product.product_view_form_simple"/> -->
+        <field name="products" mode="form,tree" colspan="4" view_ids="product.product_view_form_simple"/>
         <field name="categories" colspan="4" view_ids="product.category_view_list"/>
     </page>
 </notebook>
