@@ -196,6 +196,11 @@ class InpatientRegistration(ModelSQL, ModelView):
         'gnuhealth.hospital.unit', 'Unidad',
         required=True, states=STATES)
 
+    days_in_hospital = fields.Function(
+        fields.Integer('dias de internación',
+            help="Días de internación",
+            depends=['discharge_date', 'hospitalization_date']),
+         'get_days_in_hospital')
 
     # Fin personalizados
 
@@ -384,6 +389,14 @@ class InpatientRegistration(ModelSQL, ModelView):
             return f'{self.name}:{self.bed.rec_name}:{self.patient.rec_name}'
         else:
             return self.name
+
+    # Personalizado para Sanatorio Concordia S.A.
+    def get_days_in_hospital(self, name):
+        if self.discharge_date:
+            return int((self.discharge_date - self.hospitalization_date).days)
+        else:
+            return None
+    # Fin personalizado
 
     # Allow searching by the hospitalization code, patient name
     # or bed number
