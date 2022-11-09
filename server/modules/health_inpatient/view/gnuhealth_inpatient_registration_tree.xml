@@ -2,7 +2,7 @@
 <tree>
 <!-- 
     El campo institucion no se muestra en el formulario
-    se agregaron los campos insurance, unit correspondiente a la actualizacion en
+    se agregaron los campos insurance, unit, days_in_hospital correspondiente a la actualizacion en
     el modulo health_insurance.py
 -->
     <!-- <field name="name" invisible="1"/> -->
