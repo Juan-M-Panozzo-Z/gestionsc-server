@@ -251,8 +251,21 @@ class Invoice(Workflow, ModelSQL, ModelView, TaxableMixin):
     invoice_report_format = fields.Char('Invoice Report Format', readonly=True)
     allow_cancel = fields.Function(
         fields.Boolean("Allow Cancel Invoice"), 'get_allow_cancel')
-
     del _states, _depends
+
+    # Personalizados para Sanatorio Concordia S.A.
+    # Recordar colocar nuevos campos en base de datos
+    # type_facturacion = integer
+
+    type_facturacion = fields.Selection([
+        (1, 'Farmacia'),
+        (2, 'ART'),
+        (3, 'Internacion'),
+        (4, 'Consultorio'),
+        (5, 'Otros'),
+        ], 'Tipo de facturacion',)
+
+    # Fin personalizados
 
     @classmethod
     def __setup__(cls):
@@ -1859,6 +1872,21 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
     ayudante_unit = fields.Function(fields.Integer('Unidades de ayudante',),
         'on_change_with_ayudante_unit')
 
+    type_unit = fields.Selection([
+        ('1', 'especialista'),
+        ('2', 'ayudante'),
+        ], 'Tipo de unidad a utilizar', sort=False,
+        states={'readonly': Eval('invoice_type') != 'in',},
+        depends=['invoice_type'])
+
+    healthprofessional = fields.Many2One(
+        'gnuhealth.healthprofessional',
+        'Profesional de la salud',)
+
+    # type_facturacion = fields.Function(fields.Integer('Tipo de facturacion',),
+    #     'on_change_with_type_facturacion')
+
+
     # fin personalizados
 
     invoice_date = fields.Many2One(
@@ -2026,6 +2054,12 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
             return self.product.ayudante_unit
         return None
 
+    # @fields.depends('invoice')
+    # def on_change_with_type_facturacion(self, name=None):
+    #     if self.invoice:
+    #         return self.invoice.type_facturacion
+    #     return None
+
     # Fin personalizados
 
     @fields.depends('invoice', '_parent_invoice.state')
@@ -2064,7 +2098,7 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
     @fields.depends(
         'type', 'quantity', 'unit_price', 'taxes_deductible_rate', 'invoice',
         '_parent_invoice.currency', 'currency', 'taxes',
-        '_parent_invoice.type', 'invoice_type','gasto_unit','especialista_unit','ayudante_unit',
+        '_parent_invoice.type', 'invoice_type','gasto_unit','especialista_unit','ayudante_unit','type_unit',
         methods=['_get_taxes'])
     def on_change_with_amount(self):
         if self.type == 'line':
@@ -2073,14 +2107,17 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
                 # Personalizado para Sanatorio Concordia
                 # Aquí se calcula el monto de la línea de factura
                 # Se agrego el campo nomenclador_unit a la línea de factura
-            if (self.invoice_type == 'in'):
+            if (self.invoice_type != 'in'):
                 amount = (Decimal(str(self.quantity or '0.0'))
-                 * (self.gasto_unit or Decimal('1.0'))
-                 * (self.unit_price or Decimal('0.0')))
+                 * (self.unit_price or Decimal('0.0'))
+                 * (self.gasto_unit or Decimal('1.0')))
             else:
                 amount = (Decimal(str(self.quantity or '0.0'))
-                 * (self.especialista_unit or Decimal('1.0'))
-                 * (self.unit_price or Decimal('0.0')))
+                * (self.unit_price or Decimal('0.0')))
+                if (self.type_unit == '1'):
+                    amount *= (self.especialista_unit or Decimal('1.0'))
+                elif (self.type_unit == '2'):
+                    amount *= (self.ayudante_unit or Decimal('1.0'))
                 #  fin personalizado
             invoice_type = (
                 self.invoice.type if self.invoice else self.invoice_type)

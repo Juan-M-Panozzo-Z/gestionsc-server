@@ -21,12 +21,18 @@ this repository contains the full copyright notices and license terms. -->
             <field name="product"/>
             <label name="account"/>
             <field name="account"/>
+            <label name="type_unit"/>
+            <field name="type_unit"/>
+            <label name="healthprofessional"/>
+            <field name="healthprofessional"/>
             <label name="quantity"/>
             <field name="quantity"/>
             <label name="unit_price"/>
             <field name="unit_price" symbol="currency"/>
             <label name="amount"/>
             <field name="amount" symbol="currency"/>
+            <!-- <label name="type_facturacion"/>
+            <field name="type_facturacion"/> -->
             <!-- <label name="unit" invisible="1"/> -->
             <field name="unit" invisible="1"/>
             <field name="gasto_unit" invisible="1"/>
