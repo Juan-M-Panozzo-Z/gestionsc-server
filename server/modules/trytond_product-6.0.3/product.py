@@ -117,9 +117,14 @@ class Template(
         'template', 'category', "Categories", readonly=True)
     products = fields.One2Many(
         'product.product', 'template', "Variants",
-        domain=[
-            If(~Eval('active'), ('active', '=', False), ()),
-            ],
+        domain=[If(~Eval('active'), ('active', '=', False), ()),],
+        states = {'invisible': Eval('type') == 'nomenclador'},
+        depends=['active'],
+        help="The different variants the product comes in.")
+    aranceles = fields.One2Many(
+        'product.product', 'template', "Aranceles",
+        domain=[If(~Eval('active'), ('active', '=', False), ()),],
+        states = {'invisible': Eval('type') != 'nomenclador'},
         depends=['active'],
         help="The different variants the product comes in.")
 
@@ -402,6 +407,7 @@ class Product(
         help="A unique identifier for the variant.")
     identifiers = fields.One2Many(
         'product.identifier', 'product', "Identifiers",
+        states = {'invisible': Eval('type') != 'goods'},
         help="Other identifiers associated with the variant.")
     cost_price = fields.MultiValue(fields.Numeric(
             "Cost Price", required=True, digits=price_digits,
@@ -465,11 +471,6 @@ class Product(
                     setattr(cls, 'order_%s' % attr, order_method)
                 if isinstance(tfield, fields.One2Many):
                     getattr(cls, attr).setter = '_set_template_function'
-
-    # TODO: Personalizacion para Sanatorio Concordia S.A.
-    # Recordar colocar nuevos campos en base de datos
-
-    # Fin personalizados
 
     @classmethod
     def __register__(cls, module):

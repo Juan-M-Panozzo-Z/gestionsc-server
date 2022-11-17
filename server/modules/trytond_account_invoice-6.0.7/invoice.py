@@ -1883,8 +1883,8 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
         'gnuhealth.healthprofessional',
         'Profesional de la salud',)
 
-    # type_facturacion = fields.Function(fields.Integer('Tipo de facturacion',),
-    #     'on_change_with_type_facturacion')
+    type_facturacion = fields.Function(fields.Integer('test',), 
+        'on_change_with_invoice_type_faturacion')
 
 
     # fin personalizados
@@ -2054,11 +2054,12 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
             return self.product.ayudante_unit
         return None
 
-    # @fields.depends('invoice')
-    # def on_change_with_type_facturacion(self, name=None):
-    #     if self.invoice:
-    #         return self.invoice.type_facturacion
-    #     return None
+    @fields.depends('invoice')
+    def on_change_with_invoice_type_faturacion(self, name=None):
+        if self.invoice:
+            invoice =  self.invoice
+            return invoice.type_faturacion
+        return None
 
     # Fin personalizados
 

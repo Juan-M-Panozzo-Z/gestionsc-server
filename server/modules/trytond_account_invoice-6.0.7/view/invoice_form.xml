@@ -6,8 +6,6 @@ this repository contains the full copyright notices and license terms. -->
     <field name="type"/>
     <label name="journal"/>
     <field name="journal"/>
-    <!-- <label name="type_facturacion"/>
-    <field name="type_facturacion"/> -->
     <label name="number"/>
     <field name="number"/>
     <label name="party"/>
