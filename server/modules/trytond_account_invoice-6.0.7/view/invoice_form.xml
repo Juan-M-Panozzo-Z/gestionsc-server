@@ -1,6 +1,13 @@
 <?xml version="1.0"?>
 <!-- This file is part of Tryton.  The COPYRIGHT file at the top level of
 this repository contains the full copyright notices and license terms. -->
+<!-- 
+    se agregó el campo invoice_selector
+    correspondiente a la actualizacion en invoice.py
+
+    Todos los campos que estan como comentario
+    fueron escondidos para una interfaz mas limpia
+ -->
 <form col="6" cursor="party">
     <label name="type"/>
     <field name="type"/>
@@ -10,14 +17,12 @@ this repository contains the full copyright notices and license terms. -->
     <field name="number"/>
     <label name="party"/>
     <field name="party"/>
-    <label name="invoice_address"/>
-    <field name="invoice_address"/>
-    <label name="party_tax_identifier" string="Tax Identifier:"/>
+    <label name="party_tax_identifier"/>
     <field name="party_tax_identifier"/>
-    <label name="description"/>
-    <field name="description" colspan="3"/>
     <label name="reference"/>
     <field name="reference"/>
+    <field name="invoice_selector" invisible="1"/>
+    <field name="invoice_address" invisible="1"/>
     <notebook colspan="6">
         <page string="Invoice" id="invoice" col="6">
             <label name="invoice_date"/>

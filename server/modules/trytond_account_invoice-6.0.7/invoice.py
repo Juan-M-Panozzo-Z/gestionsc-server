@@ -255,15 +255,14 @@ class Invoice(Workflow, ModelSQL, ModelView, TaxableMixin):
 
     # Personalizados para Sanatorio Concordia S.A.
     # Recordar colocar nuevos campos en base de datos
-    # type_facturacion = integer
+    # invoice_selector = integer
 
-    type_facturacion = fields.Selection([
-        (1, 'Farmacia'),
-        (2, 'ART'),
-        (3, 'Internacion'),
-        (4, 'Consultorio'),
-        (5, 'Otros'),
-        ], 'Tipo de facturacion',)
+    invoice_selector = fields.Selection([
+        ('Farmacia', 'Farmacia'),
+        ('ART', 'ART'),
+        ('Internacion', 'Internacion'),
+        ('Otros', 'Otros'),
+        ], 'Tipo de Factura')
 
     # Fin personalizados
 
@@ -424,6 +423,10 @@ class Invoice(Workflow, ModelSQL, ModelView, TaxableMixin):
     @staticmethod
     def default_state():
         return 'draft'
+
+    @staticmethod
+    def default_invoice_selector():
+        return 'manual'
 
     @staticmethod
     def default_currency():
@@ -1793,13 +1796,15 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
                 Eval('_parent_invoice', {}).get('invoice_date')),
             },
         depends=['type', 'invoice_type', 'company'] + _depends)
-    unit_price = fields.Numeric('Unit Price', digits=price_digits,
-        states={
-            'invisible': Eval('type') != 'line',
-            'required': Eval('type') == 'line',
-            'readonly': _states['readonly'],
-            },
-        depends=['type'] + _depends)
+    
+    # Personalizados para Sanatorio Concordia S.A.
+    # unit_price se calcula en el on_change_with_unit_price
+
+    unit_price = fields.Function(fields.Numeric('Precio unitario'), 
+        'on_change_with_unit_price',)
+    
+    # Fin personalizadps
+
     amount = fields.Function(fields.Numeric('Amount',
             digits=(16, Eval('_parent_invoice', {}).get('currency_digits',
                     Eval('currency_digits', 2))),
@@ -1861,16 +1866,20 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
     # TODO: personalizados para sanatorio concordia
     # Recordar colocar nuevos campos en base de datos
     # gasto_unit = integer
+    # especialista_unit = integer
+    # ayudante_total = integer
+    # type_unit = integer
+    # healthprofessional = integer
+    # type_facturacion = integer
     
-    # Este campo llama el valor gasto_unit de la tabla product.product
     gasto_unit = fields.Function(fields.Integer('Unidades de gasto',),
-        'on_change_with_gasto_unit')
+        'on_change_with_gasto_unit',)
     
     especialista_unit = fields.Function(fields.Integer('Unidades de especialista',),
-        'on_change_with_especialista_unit')
+        'on_change_with_especialista_unit',)
     
     ayudante_unit = fields.Function(fields.Integer('Unidades de ayudante',),
-        'on_change_with_ayudante_unit')
+        'on_change_with_ayudante_unit',)
 
     type_unit = fields.Selection([
         ('1', 'especialista'),
@@ -1883,9 +1892,8 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
         'gnuhealth.healthprofessional',
         'Profesional de la salud',)
 
-    type_facturacion = fields.Function(fields.Integer('test',), 
-        'on_change_with_invoice_type_faturacion')
-
+    invoice_selector = fields.Function(fields.Char('Selector de factura'),
+        'on_change_with_invoice_selector')
 
     # fin personalizados
 
@@ -2054,11 +2062,16 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
             return self.product.ayudante_unit
         return None
 
-    @fields.depends('invoice')
-    def on_change_with_invoice_type_faturacion(self, name=None):
+    @fields.depends('product')
+    def on_change_with_unit_price(self, name=None):
+        if self.product:
+            return Decimal(self.product.cost_price)
+        return Decimal(0.0)
+
+    @fields.depends('invoice', '_parent_invoice.invoice_selector')
+    def on_change_with_invoice_selector(self, name=None):
         if self.invoice:
-            invoice =  self.invoice
-            return invoice.type_faturacion
+            return self.invoice.invoice_selector
         return None
 
     # Fin personalizados
