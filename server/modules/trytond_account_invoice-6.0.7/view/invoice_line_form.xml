@@ -5,8 +5,8 @@ this repository contains the full copyright notices and license terms. -->
     se agregaron los campos gasto_unit, especialista_unit y ayudante_unit, invoice_selector
     correspondientes a la actualizacion en invoice.py
 
-    Todos los campos que estan como comentario
-    fueron escondidos para una interfaz mas limpia
+    El campo unit se eliminó para una interfaz mas limpia
+    Se agregó un separador con el string "unidades de nomenclador" para separar los campos
  -->
 <form cursor="product">
     <label name="invoice"/>
@@ -19,8 +19,6 @@ this repository contains the full copyright notices and license terms. -->
             <field name="product"/>
             <label name="account"/>
             <field name="account"/>
-            <!-- <label name="type_unit"/>
-            <field name="type_unit"/> -->
             <label name="healthprofessional"/>
             <field name="healthprofessional"/>
             <label name="quantity"/>
@@ -36,8 +34,9 @@ this repository contains the full copyright notices and license terms. -->
             <field name="especialista_unit"/>
             <label name="ayudante_unit"/>
             <field name="ayudante_unit"/>
-            <field name="unit" invisible="1"/>
+            <label name="invoice_selector"/>
             <field name="invoice_selector"/>
+            <field name="unit" invisible="1"/>
             <!-- <label name="taxes_date"/> -->
             <!-- <field name="taxes_date"/> -->
             <!-- <label name="taxes_deductible_rate"/> -->

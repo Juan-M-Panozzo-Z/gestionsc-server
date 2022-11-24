@@ -653,7 +653,11 @@ class Product(
     def sync_code(cls, products):
         for product in products:
             code = ''.join(filter(None, [
-                        product.prefix_code, product.suffix_code]))
+    # Personalizado para Sanatorio Concordia S.A.
+    # Se agregó un espacio entre product.prefix_code y product.suffix_code
+    # para que el código de producto quede separado 
+                        product.prefix_code,' ', product.suffix_code]))
+    # Fin personalizado
             if not code:
                 code = None
             if code != product.code:

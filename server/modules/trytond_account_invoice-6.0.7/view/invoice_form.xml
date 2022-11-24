@@ -21,8 +21,6 @@ this repository contains the full copyright notices and license terms. -->
     <field name="party_tax_identifier"/>
     <label name="reference"/>
     <field name="reference"/>
-    <field name="invoice_selector" invisible="1"/>
-    <field name="invoice_address" invisible="1"/>
     <notebook colspan="6">
         <page string="Invoice" id="invoice" col="6">
             <label name="invoice_date"/>
@@ -94,4 +92,7 @@ this repository contains the full copyright notices and license terms. -->
         <button name="process" icon="tryton-refresh"/>
     </group>
     <field name="party_lang" invisible="1" colspan="6"/>
+    <!-- Personalizado para Sanatorio Concoridia S.A. -->
+    <field name="invoice_selector" invisible="1"/>
+    <!-- Fin personalizado -->
 </form>

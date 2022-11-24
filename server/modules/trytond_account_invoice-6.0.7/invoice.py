@@ -120,7 +120,7 @@ class Invoice(Workflow, ModelSQL, ModelView, TaxableMixin):
     party_lang = fields.Function(fields.Char('Party Language'),
         'on_change_with_party_lang')
     invoice_address = fields.Many2One('party.address', 'Invoice Address',
-        required=True, states=_states, depends=_depends + ['party'],
+        states=_states, depends=_depends + ['party'],
         domain=[('party', '=', Eval('party'))])
     currency = fields.Many2One('currency.currency', 'Currency', required=True,
         states={
