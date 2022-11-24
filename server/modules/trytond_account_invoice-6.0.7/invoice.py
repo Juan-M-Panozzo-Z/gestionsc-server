@@ -258,10 +258,10 @@ class Invoice(Workflow, ModelSQL, ModelView, TaxableMixin):
     # invoice_selector = integer
 
     invoice_selector = fields.Selection([
-        ('Farmacia', 'Farmacia'),
+        ('farmacia', 'Farmacia'),
         ('ART', 'ART'),
-        ('Internacion', 'Internacion'),
-        ('Otros', 'Otros'),
+        ('internacion', 'Internacion'),
+        ('otros', 'Otros'),
         ], 'Tipo de Factura')
 
     # Fin personalizados
@@ -423,10 +423,6 @@ class Invoice(Workflow, ModelSQL, ModelView, TaxableMixin):
     @staticmethod
     def default_state():
         return 'draft'
-
-    @staticmethod
-    def default_invoice_selector():
-        return 'manual'
 
     @staticmethod
     def default_currency():
@@ -1765,12 +1761,12 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
         depends=['product', 'type', 'product_uom_category'] + _depends)
     unit_digits = fields.Function(fields.Integer('Unit Digits'),
         'on_change_with_unit_digits')
+
     product = fields.Many2One('product.product', 'Product',
         ondelete='RESTRICT',
-        domain=[
+        domain = [
             If(Bool(Eval('product_uom_category')),
-                ('default_uom_category', '=', Eval('product_uom_category')),
-                ()),
+            ('default_uom_category', '=', Eval('product_uom_category')),()),
             ],
         states={
             'invisible': Eval('type') != 'line',
@@ -1799,7 +1795,7 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
     
     # Personalizados para Sanatorio Concordia S.A.
     # unit_price se calcula en el on_change_with_unit_price
-
+    
     unit_price = fields.Function(fields.Numeric('Precio unitario'), 
         'on_change_with_unit_price',)
     
@@ -1872,26 +1868,27 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
     # healthprofessional = integer
     # type_facturacion = integer
     
-    gasto_unit = fields.Function(fields.Integer('Unidades de gasto',),
-        'on_change_with_gasto_unit',)
+    gasto_unit = fields.Function(fields.Integer('gasto',
+        ), 'on_change_with_gasto_unit',)
     
-    especialista_unit = fields.Function(fields.Integer('Unidades de especialista',),
-        'on_change_with_especialista_unit',)
+    especialista_unit = fields.Function(fields.Integer('especialista',
+        ), 'on_change_with_especialista_unit',)
     
-    ayudante_unit = fields.Function(fields.Integer('Unidades de ayudante',),
-        'on_change_with_ayudante_unit',)
+    ayudante_unit = fields.Function(fields.Integer('ayudante',
+        ), 'on_change_with_ayudante_unit',)
 
     type_unit = fields.Selection([
         ('1', 'especialista'),
         ('2', 'ayudante'),
         ], 'Tipo de unidad a utilizar', sort=False,
-        states={'readonly': Eval('invoice_type') != 'in',},
+        states={
+            'readonly': Eval('invoice_type') != 'in',
+            'invisible': 'invoice_selector' != 'Farmacia'},
         depends=['invoice_type'])
 
     healthprofessional = fields.Many2One(
-        'gnuhealth.healthprofessional',
-        'Profesional de la salud',)
-
+        'gnuhealth.healthprofessional', 'Profesional de la salud')
+        
     invoice_selector = fields.Function(fields.Char('Selector de factura'),
         'on_change_with_invoice_selector')
 
@@ -2062,11 +2059,11 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
             return self.product.ayudante_unit
         return None
 
-    @fields.depends('product')
+    @fields.depends('product','invoice', '_parent_invoice.invoice_selector')
     def on_change_with_unit_price(self, name=None):
         if self.product:
             return Decimal(self.product.cost_price)
-        return Decimal(0.0)
+        return 0.0
 
     @fields.depends('invoice', '_parent_invoice.invoice_selector')
     def on_change_with_invoice_selector(self, name=None):
@@ -2127,7 +2124,7 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
                  * (self.gasto_unit or Decimal('1.0')))
             else:
                 amount = (Decimal(str(self.quantity or '0.0'))
-                * (self.unit_price or Decimal('0.0')))
+                * (self.unit_price or Decimal('1.0')))
                 if (self.type_unit == '1'):
                     amount *= (self.especialista_unit or Decimal('1.0'))
                 elif (self.type_unit == '2'):
