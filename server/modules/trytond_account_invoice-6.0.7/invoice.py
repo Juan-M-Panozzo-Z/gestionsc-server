@@ -1866,7 +1866,7 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
     # ayudante_total = integer
     # type_unit = integer
     # healthprofessional = integer
-    # type_facturacion = integer
+    # invoice_selector = characther varying
     
     gasto_unit = fields.Function(fields.Integer('gasto',
         ), 'on_change_with_gasto_unit',)
@@ -1878,12 +1878,12 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
         ), 'on_change_with_ayudante_unit',)
 
     type_unit = fields.Selection([
-        ('1', 'especialista'),
-        ('2', 'ayudante'),
+        (1, 'especialista'),
+        (2, 'ayudante'),
         ], 'Tipo de unidad a utilizar', sort=False,
         states={
             'readonly': Eval('invoice_type') != 'in',
-            'invisible': 'invoice_selector' != 'Farmacia'},
+            'invisible': 'invoice_selector' == 'farmacia'},
         depends=['invoice_type'])
 
     healthprofessional = fields.Many2One(
@@ -2062,6 +2062,8 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
     @fields.depends('product','invoice', '_parent_invoice.invoice_selector')
     def on_change_with_unit_price(self, name=None):
         if self.product:
+            if (self.invoice_selector == 'farmacia'):
+                return Decimal(self.product.list_price)
             return Decimal(self.product.cost_price)
         return 0.0
 
@@ -2109,27 +2111,40 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
     @fields.depends(
         'type', 'quantity', 'unit_price', 'taxes_deductible_rate', 'invoice',
         '_parent_invoice.currency', 'currency', 'taxes',
-        '_parent_invoice.type', 'invoice_type','gasto_unit','especialista_unit','ayudante_unit','type_unit',
+        '_parent_invoice.type', 'invoice_type','gasto_unit','especialista_unit','ayudante_unit','type_unit','invoice_selector',
         methods=['_get_taxes'])
     def on_change_with_amount(self):
         if self.type == 'line':
             currency = (self.invoice.currency if self.invoice
                 else self.currency)
+
                 # Personalizado para Sanatorio Concordia
+                
                 # Aquí se calcula el monto de la línea de factura
-                # Se agrego el campo nomenclador_unit a la línea de factura
-            if (self.invoice_type != 'in'):
-                amount = (Decimal(str(self.quantity or '0.0'))
-                 * (self.unit_price or Decimal('0.0'))
-                 * (self.gasto_unit or Decimal('1.0')))
+                # Se agrego los campos 
+                # especialista_unit, ayudante_unit, gastos_unit, type_unit, invoice_selector
+                # a la línea de factura
+
+            if (self.invoice_type == 'in'):
+                if (self.invoice_selector == 'farmacia'):
+                    amount = self.quantity * self.unit_price
+                else:
+                    amount = (Decimal(str(self.quantity or '0.0'))
+                    * (self.unit_price or Decimal('0.0'))
+                    * (self.gasto_unit or Decimal('1.0')))
             else:
-                amount = (Decimal(str(self.quantity or '0.0'))
-                * (self.unit_price or Decimal('1.0')))
-                if (self.type_unit == '1'):
-                    amount *= (self.especialista_unit or Decimal('1.0'))
-                elif (self.type_unit == '2'):
-                    amount *= (self.ayudante_unit or Decimal('1.0'))
+                if (self.invoice_selector == 'farmacia'):
+                    amount = self.quantity * self.unit_price
+                else:
+                    amount = (Decimal(str(self.quantity or '0.0'))
+                    * (self.unit_price or Decimal('1.0')))
+                    if (self.type_unit == 1):
+                        amount *= (self.especialista_unit or Decimal('1.0'))
+                    elif (self.type_unit == 2):
+                        amount *= (self.ayudante_unit or Decimal('1.0'))
+
                 #  fin personalizado
+
             invoice_type = (
                 self.invoice.type if self.invoice else self.invoice_type)
             if (invoice_type == 'in'

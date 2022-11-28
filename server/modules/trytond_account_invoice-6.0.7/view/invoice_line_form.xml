@@ -28,14 +28,14 @@ this repository contains the full copyright notices and license terms. -->
             <label name="amount"/>
             <field name="amount" symbol="currency"/>
             <separator string="Unidades de nomenclador" id="nomenclador" colspan="4"/>
+            <label name="type_unit"/>
+            <field name="type_unit"/>
             <label name="gasto_unit"/>
             <field name="gasto_unit"/>
             <label name="especialista_unit"/>
             <field name="especialista_unit"/>
             <label name="ayudante_unit"/>
             <field name="ayudante_unit"/>
-            <label name="invoice_selector"/>
-            <field name="invoice_selector"/>
             <field name="unit" invisible="1"/>
             <!-- <label name="taxes_date"/> -->
             <!-- <field name="taxes_date"/> -->
@@ -59,4 +59,6 @@ this repository contains the full copyright notices and license terms. -->
         </page> -->
     </notebook>
     <field name="party_lang" invisible="1" colspan="4"/>
+    <field name="invoice_selector" invisible="1"/>
 </form>
+
