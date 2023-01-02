@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+# !/usr/bin/env python
 # -*- coding: utf-8 -*-
 #    Copyright (C) 2011-2022 Luis Falcon <falcon@gnuhealth.org>
 #    Copyright (C) 2011 Cédric Krier
@@ -38,7 +38,6 @@ requires = []
 for dep in info.get('depends', []):
     if (dep == 'health'):
         requires.append('gnuhealth == %s' % (info.get('version')))
-
     elif dep.startswith('health_'):
         health_package = dep.split('_',1)[1]
         requires.append('gnuhealth_%s == %s' %

@@ -12,7 +12,6 @@ from .uom import uom_conversion_digits
 
 __all__ = [price_digits, round_price, uom_conversion_digits]
 
-
 def register():
     Pool.register(
         ir.Configuration,
@@ -30,4 +29,5 @@ def register():
         product.TemplateCategoryAll,
         configuration.Configuration,
         configuration.ConfigurationDefaultCostPriceMethod,
-        module='product', type_='model')
+        module='product', type_='model'
+    )

@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!-- This file is part of Tryton.  The COPYRIGHT file at the top level of
+this repository contains the full copyright notices and license terms. -->
+<!-- Se agregaron los campos gasto_unit, especialista_unit, ayudante_unit  -->
+<!-- correspondientes a la actualizacion en product.py -->
+<!-- 
+    Se agregó el campo aranceles, correspodiente a las modificaciones que corresponden 
+    al sistema nomenclador
+    Se escondió el campo categories, debido a que no se utiliza en el sistema
+-->
+
+<form col="6">
+<label name="name"/>
+<field name="name" xexpand="1"/>
+<label name="code"/>
+<field name="code"/>
+<label name="active"/>
+<field name="active" xexpand="0" width="100"/>
+
+<notebook colspan="6">
+    <page string="General" id="general">
+        <label name="type"/>
+        <field name="type"/>
+        <group colspan="2" col="-1" id="checkboxes">
+            <label name="consumable"/>
+            <field name="consumable" xexpand="0" width="25"/>
+        </group>
+        <label name="default_uom"/>
+        <field name="default_uom"/>
+        <newline/>
+        <label name="list_price"/>
+        <field name="list_price"/>
+        <label name="cost_price"/>
+        <field name="cost_price"/>
+        <label name="cost_price_method"/>
+        <field name="cost_price_method"/>
+        <separator string="Unidades de nomenclador" id="nomenclador" colspan="4"/>
+        if context.get('type') == 'nomenclador':
+            <label name="gasto_unit"/>
+            <field name="gasto_unit"/>
+            <label name="especialista_unit"/>
+            <field name="especialista_unit"/>
+            <label name="ayudante_unit"/>
+            <field name="ayudante_unit"/>
+        <newline/>
+            <field name="products" mode="form,tree" colspan="4" view_ids="product.product_view_form_simple"/>
+            <field name="aranceles" mode="form,tree" colspan="4" view_ids="product.product_view_form_simple"/>
+            <!-- <field name="categories" colspan="2" view_ids="product.category_view_list"/> -->
+    </page>
+</notebook>
+</form>

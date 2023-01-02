@@ -26,7 +26,6 @@ from trytond.modules.company.model import (
 from .exceptions import InvalidIdentifierCode
 from .ir import price_decimal
 
-
 __all__ = ['price_digits', 'round_price', 'TemplateFunction']
 logger = logging.getLogger(__name__)
 
@@ -35,7 +34,8 @@ TYPES = [
     ('assets', 'Assets'),
     ('service', 'Service'),
     # Personalizados para Sanatorio Concordia
-    # Se agregó el tipo nomenclador
+    # Se agregaron los tipos nomencladory vademecum
+    ('vademecum', 'Vademecum'),
     ('nomenclador', 'Nomenclador'),
     # fin personalizados
     ]
