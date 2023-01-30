@@ -130,9 +130,24 @@ class Template(
 
     # TODO: Personalizacion para Sanatorio Concordia S.A.
     # Recordar colocar nuevos campos en base de datos
+    # lab = Char
     # gasto_unit = Integer
     # especialista_unit = Integer
     # ayudante_unit = Integer
+
+    lab = fields.Char(
+        'Laboratorio',
+        help="Laboratorio del producto",
+        states={
+            'invisible': Eval('type') != 'vademecum',
+        },depends=['type'],)
+
+    monodroga = fields.Char(
+        'Monodroga',
+        help="Monodroga del producto",
+        states={
+            'invisible': Eval('type') != 'vademecum',
+        },depends=['type'],)
     
     gasto_unit = fields.Integer(
         'Gasto',

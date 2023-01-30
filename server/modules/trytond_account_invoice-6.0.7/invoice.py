@@ -1747,26 +1747,25 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
             'readonly': _states['readonly'],
             },
         depends=['type', 'unit_digits'] + _depends)
-    unit = fields.Many2One('product.uom', 'Unit', ondelete='RESTRICT',
-        states={
-            'required': Bool(Eval('product')),
-            'invisible': Eval('type') != 'line',
-            'readonly': _states['readonly'],
-            },
-        domain=[
-            If(Bool(Eval('product_uom_category')),
-                ('category', '=', Eval('product_uom_category')),
-                ('category', '!=', -1)),
-            ],
-        depends=['product', 'type', 'product_uom_category'] + _depends)
+    unit = fields.Many2One('product.uom', 'Unit', ondelete='RESTRICT',)
+        # states={
+        #     'required': Bool(Eval('product')),
+        #     'invisible': Eval('type') != 'line',
+        #     'readonly': _states['readonly'],
+        #     },
+        # domain=[
+        #     If(Bool(Eval('product_uom_category')),
+        #         ('category', '=', Eval('product_uom_category')),
+        #         ('category', '!=', -1)),
+        #     ],
+        # depends=['product', 'type', 'product_uom_category'] + _depends)
     unit_digits = fields.Function(fields.Integer('Unit Digits'),
         'on_change_with_unit_digits')
 
-    product = fields.Many2One('product.product', 'Product',
+    product = fields.Many2One('product.template', 'Product',
         ondelete='RESTRICT',
         domain = [
-            If(Bool(Eval('product_uom_category')),
-            ('default_uom_category', '=', Eval('product_uom_category')),()),
+            ('type', 'in', ['nomenclador', 'vademecum']),
             ],
         states={
             'invisible': Eval('type') != 'line',
