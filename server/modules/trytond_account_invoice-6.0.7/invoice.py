@@ -1747,18 +1747,19 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
             'readonly': _states['readonly'],
             },
         depends=['type', 'unit_digits'] + _depends)
-    unit = fields.Many2One('product.uom', 'Unit', ondelete='RESTRICT',)
-        # states={
-        #     'required': Bool(Eval('product')),
-        #     'invisible': Eval('type') != 'line',
-        #     'readonly': _states['readonly'],
-        #     },
-        # domain=[
-        #     If(Bool(Eval('product_uom_category')),
-        #         ('category', '=', Eval('product_uom_category')),
-        #         ('category', '!=', -1)),
-        #     ],
-        # depends=['product', 'type', 'product_uom_category'] + _depends)
+    unit = fields.Many2One('product.uom', 'Unit', ondelete='RESTRICT',
+        states={
+            'required': Bool(Eval('product')),
+            'invisible': Eval('type') != 'line',
+            'readonly': _states['readonly'],
+            },
+        domain=[
+            If(Bool(Eval('product_uom_category')),
+                ('category', '=', Eval('product_uom_category')),
+                ('category', '!=', -1)),
+            ],
+        depends=['product', 'type', 'product_uom_category'] + _depends)
+
     unit_digits = fields.Function(fields.Integer('Unit Digits'),
         'on_change_with_unit_digits')
 
@@ -1877,9 +1878,10 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
         ), 'on_change_with_ayudante_unit',)
 
     type_unit = fields.Selection([
+        (0, 'No definido'),
         (1, 'especialista'),
         (2, 'ayudante'),
-        ], 'Tipo de unidad a utilizar', sort=False,
+        ], 'Tipo de unidad a utilizar',
         states={
             'readonly': Eval('invoice_type') != 'in',
             'invisible': 'invoice_selector' == 'farmacia'},
@@ -2032,6 +2034,10 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
         return 'draft'
 
     @classmethod
+    def default_type_unit(cls):
+        return 0
+
+    @classmethod
     def get_invoice_states(cls):
         pool = Pool()
         Invoice = pool.get('account.invoice')
@@ -2133,7 +2139,7 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
                     * (self.gasto_unit or Decimal('1.0')))
             else:
                 if (self.invoice_selector == 'farmacia'):
-                    amount = self.quantity * self.unit_price
+                    amount = Decimal(self.quantity) * Decimal(self.unit_price)
                 else:
                     amount = (Decimal(str(self.quantity or '0.0'))
                     * (self.unit_price or Decimal('1.0')))

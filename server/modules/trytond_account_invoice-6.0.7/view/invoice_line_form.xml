@@ -36,7 +36,6 @@ this repository contains the full copyright notices and license terms. -->
             <field name="especialista_unit"/>
             <label name="ayudante_unit"/>
             <field name="ayudante_unit"/>
-            <field name="unit" invisible="1"/>
             <!-- <label name="taxes_date"/> -->
             <!-- <field name="taxes_date"/> -->
             <!-- <label name="taxes_deductible_rate"/> -->
@@ -58,7 +57,7 @@ this repository contains the full copyright notices and license terms. -->
             <field name="note" colspan="4"/>
         </page> -->
     </notebook>
+    <field name="unit" invisible = "1"/>
     <field name="party_lang" invisible="1" colspan="4"/>
     <field name="invoice_selector" invisible="1"/>
 </form>
-
