@@ -7,46 +7,46 @@ this repository contains the full copyright notices and license terms. -->
 
     El campo unit se eliminó para una interfaz mas limpia
     Se agregó un separador con el string "unidades de nomenclador" para separar los campos
- -->
+-->
 <form cursor="product">
-    <label name="invoice"/>
-    <field name="invoice" colspan="3"/>
-    <field name="type" invisible="1"/>
-    <field name="sequence" invisible="1"/>
+    <label name="invoice" />
     <notebook colspan="4">
         <page string="General" id="general">
-            <label name="product"/>
-            <field name="product"/>
-            <label name="account"/>
-            <field name="account"/>
-            <label name="healthprofessional"/>
-            <field name="healthprofessional"/>
-            <label name="quantity"/>
-            <field name="quantity"/>
-            <label name="unit_price"/>
-            <field name="unit_price" symbol="currency"/>
-            <label name="amount"/>
-            <field name="amount" symbol="currency"/>
-            <separator string="Unidades de nomenclador" id="nomenclador" colspan="4"/>
-            <label name="type_unit"/>
-            <field name="type_unit"/>
-            <label name="gasto_unit"/>
-            <field name="gasto_unit"/>
-            <label name="especialista_unit"/>
-            <field name="especialista_unit"/>
-            <label name="ayudante_unit"/>
-            <field name="ayudante_unit"/>
+            <label name="product" />
+            <field name="product" />
+            <label name="account" />
+            <field name="account" />
+            <label name="healthprofessional" />
+            <field name="healthprofessional" />
+            <label name="quantity" />
+            <field name="quantity" />
+            <separator colspan="4" />
+            <label name="unit_price_manual" />
+            <field name="unit_price_manual" symbol="currency" />
+            <label name="unit_price" />
+            <field name="unit_price" symbol="currency" />
+            <label name="amount" />
+            <field name="amount" symbol="currency" />
+            <separator id="nomenclador" colspan="4" />
+            <label name="type_unit" />
+            <field name="type_unit" />
+            <label name="gasto_unit" />
+            <field name="gasto_unit" />
+            <label name="especialista_unit" />
+            <field name="especialista_unit" />
+            <label name="ayudante_unit" />
+            <field name="ayudante_unit" />
             <!-- <label name="taxes_date"/> -->
             <!-- <field name="taxes_date"/> -->
             <!-- <label name="taxes_deductible_rate"/> -->
             <!-- <group col="2" id="taxes_deductible_rate"> -->
-                <!-- <field name="taxes_deductible_rate" factor="100" xexpand="0"/> -->
-                <!-- <label name="taxes_deductible_rate" string="%" xalign="0.0" xexpand="1"/> -->
+            <!-- <field name="taxes_deductible_rate" factor="100" xexpand="0"/> -->
+            <!-- <label name="taxes_deductible_rate" string="%" xalign="0.0" xexpand="1"/> -->
             <!-- </group> -->
             <!-- <field name="taxes" colspan="4"/> -->
 
-            <label name="origin" invisible="1"/>
-            <field name="origin" colspan="3" invisible="1"/>
+            <label name="origin" invisible="1" />
+            <field name="origin" colspan="3" invisible="1" />
         </page>
         <!-- <page name="description">
             <separator name="description" colspan="4"/>
@@ -57,7 +57,10 @@ this repository contains the full copyright notices and license terms. -->
             <field name="note" colspan="4"/>
         </page> -->
     </notebook>
-    <field name="unit" invisible = "1"/>
-    <field name="party_lang" invisible="1" colspan="4"/>
-    <field name="invoice_selector" invisible="1"/>
+    <field name="invoice" colspan="3" />
+    <field name="type" invisible="1" />
+    <field name="sequence" invisible="1" />
+    <field name="unit" invisible="1" />
+    <field name="party_lang" invisible="1" colspan="4" />
+    <field name="invoice_selector" invisible="1" />
 </form>
