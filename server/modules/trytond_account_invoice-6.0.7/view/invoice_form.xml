@@ -95,6 +95,6 @@ this repository contains the full copyright notices and license terms. -->
     </group>
     <field name="party_lang" invisible="1" colspan="6" />
     <!-- Personalizado para Sanatorio Concoridia S.A. -->
-    <field name="invoice_selector"/>
+    <field name="invoice_selector" invisible="1"/>
     <!-- Fin personalizado -->
 </form>
