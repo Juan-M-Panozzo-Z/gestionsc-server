@@ -374,7 +374,7 @@ class Invoice(Workflow, ModelSQL, ModelView, TaxableMixin):
 
     # Personalizados para Sanatorio Concordia S.A.
     # Recordar colocar nuevos campos en base de datos
-    # invoice_selector = integer
+    # invoice_selector = character varying
 
     invoice_selector = fields.Selection(
         [
@@ -2152,8 +2152,7 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
         fields.Numeric("Precio unitario"),
         "on_change_with_unit_price",
     )
-
-    # Fin personalizadps
+    # Fin personalizados
 
     amount = fields.Function(
         fields.Numeric(
@@ -2252,7 +2251,7 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
     # ayudante_total = integer
     # type_unit = integer
     # healthprofessional = integer
-    # invoice_selector = characther varying
+    # invoice_selector = character varying
 
     gasto_unit = fields.Function(
         fields.Integer(
@@ -2294,25 +2293,26 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
     )
 
     invoice_selector = fields.Function(
-        fields.Char("Selector de factura"), "on_change_with_invoice_selector"
+        fields.Char("Tipo de Factura"), "on_change_with_invoice_selector"
     )
 
-    invoice_type = fields.Function(
-        fields.Selection(
-            [
-                ("out", "Customer Invoice"),
-                ("in", "Supplier Invoice"),
-            ],
-            "Invoice Type",
-        ),
-        "on_change_with_invoice_type",
-    )
-    
+    # invoice_type = fields.Function(
+    #     fields.Selection(
+    #         [
+    #             ("out", "Customer Invoice"),
+    #             ("in", "Supplier Invoice"),
+    #         ],
+    #         "Invoice Type",
+    #     ),
+    #     "on_change_with_invoice_type",
+    # )
+
     unit_price_manual = fields.Numeric(
         "Precio unitario manual",
         digits=(16, Eval("currency_digits", 2)),
     )
 
+    type_unit_price = fields.Boolean("Precio unitario manual")
     # fin personalizados
 
     invoice_date = fields.Many2One(
@@ -2475,7 +2475,7 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
     @classmethod
     def default_type_unit(cls):
         return 0
-    
+
     @classmethod
     def default_unit_price_manual(cls):
         return 0
@@ -2585,6 +2585,8 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
         "ayudante_unit",
         "type_unit",
         "invoice_selector",
+        "type_unit_price",
+        "unit_price_manual",
         methods=["_get_taxes"],
     )
     def on_change_with_amount(self):
@@ -2600,24 +2602,44 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
 
             if self.invoice_type == "in":
                 if self.invoice_selector == "farmacia":
-                    amount = self.quantity * self.unit_price
+                    if self.type_unit_price == 1:
+                        amount = Decimal(self.quantity) * (
+                            self.unit_price_manual or Decimal(0.0)
+                        )
+                    else:
+                        amount = Decimal(self.quantity) * self.unit_price
                 else:
-                    amount = (
-                        Decimal(str(self.quantity or "0.0"))
-                        * (self.unit_price or Decimal("0.0"))
-                        * (self.gasto_unit or Decimal("1.0"))
-                    )
+                    if self.type_unit_price == 1:
+                        amount = Decimal(self.quantity) * (
+                            self.unit_price_manual or Decimal(0.0)
+                        )
+                    else:
+                        amount = (
+                            Decimal(str(self.quantity or "0.0"))
+                            * (self.unit_price or Decimal("0.0"))
+                            * (self.gasto_unit or Decimal("0.0"))
+                        )
             else:
                 if self.invoice_selector == "farmacia":
-                    amount = Decimal(self.quantity) * Decimal(self.unit_price)
+                    if self.type_unit_price == 1:
+                        amount = Decimal(self.quantity) * (
+                            self.unit_price_manual or Decimal(0.0)
+                        )
+                    else:
+                        amount = Decimal(self.quantity) * Decimal(self.unit_price)
                 else:
-                    amount = Decimal(str(self.quantity or "0.0")) * (
-                        self.unit_price or Decimal("1.0")
-                    )
+                    if self.type_unit_price == 1:
+                        amount = Decimal(str(self.quantity or "0.0")) * (
+                            (self.unit_price_manual or Decimal(0.0)) or Decimal("0.0")
+                        )
+                    else:
+                        amount = Decimal(str(self.quantity or "0.0")) * (
+                            self.unit_price or Decimal("0.0")
+                        )
                     if self.type_unit == 1:
-                        amount *= self.especialista_unit or Decimal("1.0")
+                        amount *= self.especialista_unit or Decimal("0.0")
                     elif self.type_unit == 2:
-                        amount *= self.ayudante_unit or Decimal("1.0")
+                        amount *= self.ayudante_unit or Decimal("0.0")
 
                 #  fin personalizado
 

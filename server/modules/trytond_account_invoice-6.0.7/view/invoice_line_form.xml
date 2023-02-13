@@ -20,6 +20,8 @@ this repository contains the full copyright notices and license terms. -->
             <field name="healthprofessional" />
             <label name="quantity" />
             <field name="quantity" />
+            <label name="type_unit_price"/>
+            <field name="type_unit_price"/>
             <separator colspan="4" />
             <label name="unit_price_manual" />
             <field name="unit_price_manual" symbol="currency" />
@@ -48,14 +50,14 @@ this repository contains the full copyright notices and license terms. -->
             <label name="origin" invisible="1" />
             <field name="origin" colspan="3" invisible="1" />
         </page>
-        <!-- <page name="description">
+        <page name="description">
             <separator name="description" colspan="4"/>
             <field name="description" colspan="4"/>
         </page>
         <page string="Notes" id="notes">
             <separator name="note" colspan="4"/>
             <field name="note" colspan="4"/>
-        </page> -->
+        </page>
     </notebook>
     <field name="invoice" colspan="3" />
     <field name="type" invisible="1" />
