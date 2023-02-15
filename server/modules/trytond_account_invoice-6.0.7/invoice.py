@@ -2507,14 +2507,14 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
             return self.product.ayudante_unit
         return None
 
-    @fields.depends("product", "invoice", "invoice_selector", "invoice_invoice_type")
+    @fields.depends("product", "invoice", "invoice_type")
     def on_change_with_unit_price(self, name=None):
         if self.product:
-            if self.invoice_invoice_type == "out":
+            if self.invoice_type == "out":
                 if self.product.list_price == None:
                     return Decimal(0.0)
                 return Decimal(self.product.list_price)
-            elif self.invoice_invoice_type == "in":
+            elif self.invoice_type == "in":
                 if self.product.cost_price == None:
                     return Decimal(0.0)
                 return Decimal(self.product.cost_price)
@@ -2634,7 +2634,7 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
                     if self.type_unit_price == 1:
                         amount = (
                             Decimal(self.quantity or 0.0)
-                            * Decimal(self.unit_price_manual or Decimal(0.0))
+                            * Decimal(self.unit_price_manual or 0.0)
                         )
                     else:
                         amount = (
@@ -2642,11 +2642,11 @@ class InvoiceLine(sequence_ordered(), ModelSQL, ModelView, TaxableMixin):
                             * Decimal(self.unit_price or Decimal(0.0))
                         )
                     if self.type_unit == 0:
-                        amount *= self.gasto_unit or Decimal(1)
+                        amount *= Decimal(self.gasto_unit or 1)
                     if self.type_unit == 1:
-                        amount *= self.especialista_unit or Decimal(1)
+                        amount *= Decimal(self.especialista_unit or 1)
                     elif self.type_unit == 2:
-                        amount *= self.ayudante_unit or Decimal(1)
+                        amount *= Decimal(self.ayudante_unit or 1)
 
                 #  fin personalizado
 
