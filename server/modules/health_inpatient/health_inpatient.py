@@ -194,7 +194,7 @@ class InpatientRegistration(ModelSQL, ModelView):
 
     unit = fields.Many2One(
         'gnuhealth.hospital.unit', 'Unidad',
-        required=True, states=STATES)
+        required=True, states=STATES, select=True)
 
     days_in_hospital = fields.Function(
         fields.Integer('dias de internación',
@@ -269,6 +269,7 @@ class InpatientRegistration(ModelSQL, ModelView):
                 'confirmed', 'hospitalized', 'done', str(bed_id)))
 
         res = cursor.fetchone()
+        # COMENTADO POR AHORA
         if (registration_id.discharge_date.date() <
                 registration_id.hospitalization_date.date()):
             raise DischargeBeforeAdmission(
@@ -287,14 +288,17 @@ class InpatientRegistration(ModelSQL, ModelView):
         registration_id = registrations[0]
         Bed = Pool().get('gnuhealth.hospital.bed')
 
-        signing_hp = get_health_professional()
-        if not signing_hp:
-            raise NoAssociatedHealthProfessional(
-                gettext('health_inpatient.'
-                        'msg_no_associated_health_professional'))
+        # signing_hp = get_health_professional()
+        # if not signing_hp:
+        #     raise NoAssociatedHealthProfessional(
+        #         gettext('health_inpatient.'
+        #                 'msg_no_associated_health_professional'))
 
         cls.write(registrations, {
-                    'state': 'done', 'discharged_by': signing_hp})
+                    'state': 'done',
+                    # COMENTADO POR AHORA
+                    # 'discharged_by': attending_physician
+                      })
 
         Bed.write([registration_id.bed], {'state': 'to_clean'})
 
@@ -336,14 +340,17 @@ class InpatientRegistration(ModelSQL, ModelView):
                 dt_local = datetime.astimezone(
                     dt.replace(tzinfo=pytz.utc), timezone)
 
-                if (registration_id.hospitalization_date.date() !=
-                        dt_local.date()):
-                    raise AdmissionMustBeToday(
-                        gettext('health_inpatient.'
-                                'msg_admission_must_be_today'))
-                else:
-                    cls.write(registrations, {'state': 'hospitalized'})
-                    Bed.write([registration_id.bed], {'state': 'occupied'})
+                # Personalizado para Sanatorio Concordia
+
+                # Se quitó el condicional que no permite cargar una internacion de un dia distinto a hoy
+                # if (registration_id.hospitalization_date.date() !=
+                #         dt_local.date()):
+                #     raise AdmissionMustBeToday(
+                #         gettext('health_inpatient.'
+                #                 'msg_admission_must_be_today'))
+                # else:
+                cls.write(registrations, {'state': 'hospitalized'})
+                Bed.write([registration_id.bed], {'state': 'occupied'})
 
             else:
                 raise NeedTimeZone(

@@ -543,6 +543,17 @@ class Party(ModelSQL, ModelView):
     def default_activation_date():
         return date.today()
 
+
+    # Personalizado para Sanatorio Concordia S.A.
+    @staticmethod
+    def default_is_person():
+        return True
+
+    def default_is_patient():
+        return True
+    
+    # Fin personalizado
+
     @classmethod
     def generate_puid(cls):
         # Add a default random string in the ref field.
